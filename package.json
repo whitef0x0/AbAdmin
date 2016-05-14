@@ -1,0 +1,31 @@
+{
+  "name": "abadmin",
+  "version": "1.0.0",
+  "description": "Easy AB testing with Express",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PavlovicDzFilip/AbTesting.git"
+  },
+  "keywords": [
+    "node",
+    "express",
+    "easy",
+    "ab",
+    "split",
+    "testing"
+  ],
+  "author": "Pavlovic Dz Filip",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/PavlovicDzFilip/AbTesting/issues"
+  },
+  "homepage": "https://github.com/PavlovicDzFilip/AbTesting#readme",
+  "dependencies": {
+    "underscore": "^1.8.3",
+    "underscore-db": "^0.10.0"
+  }
+}

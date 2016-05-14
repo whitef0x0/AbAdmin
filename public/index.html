@@ -1,0 +1,249 @@
+<!doctype html>
+<html ng-app="abadmin">
+
+<head>
+    <base href="/abadmin/">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>AB Admin page</title>
+    <meta name="description" content="AB split testing admin page">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <style>
+        body {
+            padding-top: 50px;
+            padding-bottom: 20px;
+        }
+    </style>
+    <link rel="stylesheet" href="css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="css/main.css">
+
+    <script src="js/vendor/modernizr-2.8.3.min.js"></script>
+</head>
+
+<body>
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">AB Admin</a>
+            </div>
+            <div id="navbar" class="navbar-collapse collapse">
+            </div>
+            <!--/.navbar-collapse -->
+        </div>
+    </nav>
+
+    <div class="container top-buffer" ng-controller="TestCtrl">
+        <div class="row">
+            <div class="col-md-4">
+                <!-- left campaigns listing -->
+                <div class="panel panel-info">
+                    <!-- Default panel contents -->
+                    <div class="panel-heading">Current tests</div>
+
+                    <!-- List group -->
+                    <ul class="list-group">
+                        <li class="list-group-item" ng-repeat="test in tests">
+                            <a ng-click="selectTest(test)">{{test.name}}</a>
+                        </li>
+                    </ul>
+                    <div class="panel-footer">
+                        <button class="btn btn-block btn-info" ng-click="addNewTest()">
+                            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add new test
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-md-4">
+                <form class="form-horizontal" ng-show="newTest != null && viewTest == null">
+                    <fieldset>
+                        <!-- Text input-->
+                        <div class="form-group">
+                            <label class="col-md-11 control-label" for="">Test name</label>
+                            <div class="col-md-11">
+                                <input id="" name="" type="text" placeholder="" class="form-control input-md" required="required" ng-model="newTest.name">
+
+                            </div>
+                        </div>
+                        <!-- Text input-->
+                        <div class="form-group">
+                            <label class="col-md-11 control-label" for="">Destination template</label>
+                            <div class="col-md-11">
+                                <input id="" name="" type="text" placeholder="" class="form-control input-md" required="required" ng-model="newTest.destination">
+                            </div>
+                        </div>
+
+                        <div>
+                            <!-- Text input-->
+                            <div class="form-group">
+                                <label class="col-md-11 control-label" for="">Original template</label>
+                                <div class="col-md-11">
+                                    <input id="" name="" type="text" placeholder="" class="form-control input-md" required="required" ng-model="newTest.page.template">
+
+                                </div>
+                            </div>
+
+                            <!-- Text input-->
+                            <div class="form-group" ng-hide="newTest.dynamicWeights">
+                                <label class="col-md-11 control-label" for="">Weight</label>
+                                <div class="col-md-11">
+                                    <input ng-hide="newTest.dynamicWeights" id="" name="" type="number" min="1" max="100000" placeholder="" class="form-control input-md" required="required" ng-model="newTest.page.weight">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div ng-repeat="variation in newTest.variations">
+                            <!-- Text input-->
+                            <div class="form-group">
+                                <label class="col-md-11 control-label" for="">Variation template</label>
+                                <div class="col-md-11">
+                                    <input id="" name="" type="text" placeholder="" class="form-control input-md" required="required" ng-model="variation.template">
+
+                                </div>
+                            </div>
+
+                            <!-- Text input-->
+                            <div class="form-group" ng-hide="newTest.dynamicWeights">
+                                <label class="col-md-11 control-label" for="">Weight</label>
+                                <div class="col-md-11">
+                                    <input id="" name="" type="number" min="1" max="100000" placeholder="" class="form-control input-md" required="required" ng-model="variation.weight">
+                                    <a ng-hide="$first" ng-click="removeVariation(variation)">Remove variation</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Multiple Checkboxes -->
+                        <div class="form-group">
+                            <label class="col-md-11 control-label" for="">Dynamic Weights</label>
+                            <div class="col-md-11">
+                                <div class="checkbox">
+                                    <label for="-0">
+                                        <input ng-model="newTest.dynamicWeights" type="checkbox" name="" id="-0" value="true"> Enable
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Button -->
+                        <div class="form-group">
+                            <label class="col-md-11 control-label" for=""></label>
+                            <div class="col-md-11">
+                                <button id="" name="" class="btn btn-info" type="button" ng-click="addVariation()">Add new variation</button>
+                            </div>
+                        </div>
+
+                        <!-- Button -->
+                        <div class="form-group">
+                            <label class="col-md-11 control-label" for=""></label>
+                            <div class="col-md-11">
+                                <button id="" name="" class="btn btn-success" type="button" ng-click="save()">Save</button>
+                                <button id="" name="" class="btn btn-danger" type="button" ng-click="discard()">Discard</button>
+                            </div>
+                        </div>
+
+                    </fieldset>
+                </form>
+                <div class="panel panel-primary" ng-show="viewTest != null">
+                    <!-- Default panel contents -->
+                    <div class="panel-heading">{{viewTest.name}}</div>
+
+                    <!-- Table -->
+                    <table class="table table-stripped">
+                        <tr>
+                            <td>
+                                <strong>Test</strong>
+                            </td>
+                            <td>{{viewTest.name}}</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>Destination template</strong>
+                            </td>
+                            <td>{{viewTest.destination}}</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>Dynamic Weight</strong>
+                            </td>
+                            <td>
+                                <input ng-model="viewTest.dynamicWeight" type="checkbox" name="" id="-0" value="true" disabled="disabled">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>Variations</strong>
+                            </td>
+                            <td></td>
+                        </tr>
+                    </table>
+                    <!-- List group -->
+                    <ul class="list-group">
+                        <li class="list-group-item" ng-repeat="variation in getAllVariations()">
+                            <table class="table table-stripped">
+                                <tr>
+                                    <td><strong>Template</strong></td>
+                                    <td>{{variation.template}}</td>
+                                </tr>
+                                <tr ng-hide="viewTest.dynamicWeight">
+                                    <td><strong>Weight</strong></td>
+                                    <td>{{variation.weight}}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Hits</strong></td>
+                                    <td>{{variation.hits}}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Returns</strong></td>
+                                    <td>{{variation.returns}}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Percentage %</strong></td>
+                                    <td>{{getPercentage(variation)}}</td>
+                                </tr>
+                            </table>
+                            <a ng-click="selectTest(test)">{{test.name}}</a>
+                        </li>
+                    </ul>
+                    <button id="" name="" class="btn btn-info" type="button" ng-click="hideSelectedTest()">Hide</button>
+                    <button id="" name="" class="btn btn-danger" type="button" ng-click="deleteViewTest()">Delete</button>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class=" alert alert-info">
+                    Dynamic Weights calculate the success rate of each variation, including the original page, as (click-through)/(total-page-hits) and uses the one with the highest rate
+                </div>
+                <div class=" alert alert-info">
+                    There can't be multiple tests with the same original template or the same destination template
+                </div>
+                
+            </div>
+
+
+        </div>
+    </div>
+
+    <div class="container">
+        <hr />
+        <footer>
+            <p>&copy; AB Testing 2016</p>
+            <p>Developed by <a href="https://github.com/PavlovicDzFilip/AbTesting">Pavlović Dž Filip</a> under MIT License</p>
+        </footer>
+    </div>
+    <!--    
+    <script src="js/vendor/bootstrap.min.js"></script>
+    -->
+    <script src="js/vendor/angular.min.js"></script>
+    <script src="js/vendor/angular-route.min.js"></script>
+    <script src="js/app.js"></script>
+</body>
+
+</html>

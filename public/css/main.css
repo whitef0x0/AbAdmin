@@ -1,0 +1,20 @@
+/* ==========================================================================
+   Author's custom styles
+   ========================================================================== */
+
+.top-buffer {
+    margin-top: 20px;
+}
+
+html,
+body {
+    height: 100%
+}
+
+.control-label {
+    text-align: left!important;
+}
+
+a{
+    cursor: pointer;
+}
