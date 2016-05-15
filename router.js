@@ -13,8 +13,8 @@ router.get('/test', (req, res, next) => {
 });
 
 /** delete test with given id */
-router.post('/test', (req, res, next) => {
-    var test = db.delete(req.body);
+router.post('/test/:id', (req, res, next) => {
+    var test = db.delete({id: req.params.id});
     db.flush();
     return res.send(test);
 });

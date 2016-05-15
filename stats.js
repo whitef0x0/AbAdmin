@@ -63,6 +63,7 @@ var getNextTemplate = (req, res, template) => {
         var cookieKey = `abadmin.${test.page.template}`;
         if (cookies && cookies[cookieKey]) {
             ret.template = cookies[cookieKey];
+            ret.changed = true;
             return ret;
         }
 
