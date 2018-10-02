@@ -11,7 +11,7 @@ var fs = require('fs');
 var router = require('./router');
 var stats = require('./stats');
 
-module.exports = (app) => {
-        app.use('/abadmin', router);
-        app.use('*', stats);
+module.exports = {
+	router: router,
+	stats: stats
 };
