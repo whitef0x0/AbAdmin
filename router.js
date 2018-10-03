@@ -1,43 +1,56 @@
-var express = require('express');
-var router = express.Router();
-
 var path = require('path');
 var database = require('./db');
 var db = database();
+var _ = require('underscore');
 
 /** these methods always return what tests returns */
 
-/** get all tests */
-router.get('/test', (req, res, next) => {
-    return res.send(db.loadAll());
-});
+module.exports = function createRoutes(app, authMiddleware){
+    if(!authMiddleware || authMiddleware === null){
+        authMiddleware = function(req, res, next) {
+            console.log('dummy authMiddleware')
+            next();
+        }
+    }
 
-/** delete test with given id */
-router.post('/test/:id', (req, res, next) => {
-    var test = db.delete({id: req.params.id});
-    db.flush();
-    return res.send(test);
-});
+    app.get('/abadmin', authMiddleware, (req, res) => {
+        var filePath = path.join(__dirname, 'public', 'index.html');
+        //we assume the file does exist
+        return res.sendfile(filePath);
+    });
+
+    /** get all tests */
+    app.get('/abadmin/test', authMiddleware, (req, res) => {
+        return res.send(db.loadAll());
+    });
+
+    /** delete test with given id */
+    app.post('/abadmin/test/:id', authMiddleware, (req, res) => {
+        var test = db.delete({id: req.params.id});
+        db.flush();
+        return res.send(test);
+    });
 
 
-/** create new test */
-router.post('/test', (req, res, next) => {
-    var test = db.save(req.body);
-    db.flush();
-    return res.send(test);
-});
+    /** create new test */
+    app.post('/abadmin/test', authMiddleware, (req, res) => {
+        var test = db.save(req.body);
+        db.flush();
 
-router.get('/reloaddb', (req, res, next) => {
-    db.reload();
-    return res.send();
-});
+        return res.send(test);
+    });
 
-/** route other requests to files */
-router.get('*', (req, res, next) => {
-    var file = req.url == '/' ? 'index.html' : req.url;
-    var filePath = path.join(__dirname, 'public', file);
-    //we assume the file does exist
-    return res.sendFile(filePath);
-});
+    app.get('/abadmin/reloaddb', authMiddleware, (req, res) => {
+        db.reload();
+        return res.send();
+    });
 
-module.exports = router;
+    /** route other requests to files */
+    app.get('/abadmin/*', authMiddleware, (req, res) => {
+        var file = req.originalUrl.replace('/abadmin', '')
+        var filePath = path.join(__dirname, 'public', file);
+
+        //we assume the file does exist
+        return res.sendfile(filePath);
+    });
+}

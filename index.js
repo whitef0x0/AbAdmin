@@ -8,10 +8,10 @@
 
 var path = require('path');
 var fs = require('fs');
-var router = require('./router');
+var createRouter = require('./router');
 var stats = require('./stats');
 
-module.exports = {
-	router: router,
-	stats: stats
+module.exports = function(app, authMiddleware){
+	createRouter(app, authMiddleware);
+	app.use(stats);
 };
