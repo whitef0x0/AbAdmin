@@ -1,6 +1,6 @@
 # AbAdmin
 
-AbAdmin is a simple plugin which enables Ab split testing for NodeJS apps. 
+AbAdmin is a simple plugin which enables backend-based AB split testing for NodeJS apps. 
 
 This package is developed because I couldn't find a nice one to include in my app without changing too much code. For this to work, only two lines of code are needed, and I've also created a simple interface to add/view/delete tests.
 
